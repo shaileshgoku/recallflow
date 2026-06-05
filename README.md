@@ -232,16 +232,21 @@ Because RecallFlow uses continuous background tasks (for spaced repetition sched
 8. Click **Create Web Service**. Render will automatically build the backend and deploy it.
 9. Once deployed, copy your backend URL (e.g., `https://recallflow-api.onrender.com`).
 
-### Step 3: Frontend Setup (Vercel)
-1. Go to [Vercel.com](https://vercel.com/) and click **Add New** -> **Project**.
-2. Import your `RecallFlow` repository.
-3. **CRITICAL:** Under **Root Directory**, click **Edit** and select the `frontend` folder.
-4. Open the **Environment Variables** section and add:
-   - `NEXT_PUBLIC_API_URL`: Your Render backend URL (e.g., `https://recallflow-api.onrender.com`)
-   - `NEXT_PUBLIC_APP_NAME`: `RecallFlow`
-5. Click **Deploy**.
+### Step 3: Frontend Setup (Render.com)
+If you prefer to keep everything in one place, you can also deploy the Next.js frontend on Render as a separate Web Service!
 
-That's it! Your Vercel frontend is now talking to your Render backend, which is connected to your Neon database. Background tasks will run automatically on Render.
+1. Go back to [Render.com](https://render.com/) and click **New+** -> **Web Service**.
+2. Connect your GitHub account and select your `RecallFlow` repository again.
+3. Set the **Root Directory** to `frontend`.
+4. Make sure the Runtime says **Node**.
+5. Set the **Build Command** to: `npm install && npm run build`
+6. Set the **Start Command** to: `npm start`
+7. Click **Advanced** and add the following Environment Variables:
+   - `NEXT_PUBLIC_API_URL`: Paste your Render backend URL here (e.g., `https://recallflow-api.onrender.com`)
+   - `NEXT_PUBLIC_APP_NAME`: `RecallFlow`
+8. Click **Create Web Service**. Render will build and deploy your frontend!
+
+That's it! Your frontend is now talking to your Render backend, which is connected to your Neon database.
 
 ---
 
