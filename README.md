@@ -218,14 +218,19 @@ Because RecallFlow uses continuous background tasks (for spaced repetition sched
 4. **Important:** Change `postgresql://` to `postgresql+asyncpg://` so the async backend can connect. Save this URL for Step 2.
 
 ### Step 2: Backend Setup (Render.com)
-*Note: A `render.yaml` file is included in this repository to automate this process.*
 1. Push this repository to your GitHub account.
-2. Go to [Render.com](https://render.com/) and click **New+** -> **Blueprint**.
+2. Go to [Render.com](https://render.com/) and click **New+** -> **Web Service**.
 3. Connect your GitHub account and select your `RecallFlow` repository.
-4. Render will automatically read the `render.yaml` file and prompt you for the `DATABASE_URL`.
-5. Paste your modified Neon connection string into the `DATABASE_URL` field.
-6. Click **Apply**. Render will automatically build the backend and deploy it.
-7. Once deployed, copy your backend URL (e.g., `https://recallflow-api.onrender.com`).
+4. Set the **Root Directory** to `backend`.
+5. Set the **Build Command** to: `pip install -r requirements.txt && pip install asyncpg`
+6. Set the **Start Command** to: `uvicorn app.main:app --host 0.0.0.0 --port 10000`
+7. Click **Advanced** and add the following Environment Variables:
+   - `DATABASE_URL`: Paste your modified Neon connection string.
+   - `JWT_SECRET_KEY`: A random secure string (e.g., generate one with `openssl rand -hex 32`).
+   - `DEBUG`: `False`
+   - `PYTHON_VERSION`: `3.11.0`
+8. Click **Create Web Service**. Render will automatically build the backend and deploy it.
+9. Once deployed, copy your backend URL (e.g., `https://recallflow-api.onrender.com`).
 
 ### Step 3: Frontend Setup (Vercel)
 1. Go to [Vercel.com](https://vercel.com/) and click **Add New** -> **Project**.
