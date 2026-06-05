@@ -207,36 +207,36 @@ RecallFlow/
 
 ---
 
-## 🚢 Deployment
+## 🚢 Deployment (Production)
 
-### Frontend → Vercel
+Because RecallFlow uses continuous background tasks (for spaced repetition scheduling), the **Frontend** and **Backend** should be deployed to different services. Vercel is perfect for the frontend, but the backend needs a persistent server like Render.
 
-1. Push your code to GitHub
-2. Import the `frontend/` directory in Vercel
-3. Set environment variables:
-   ```
-   NEXT_PUBLIC_API_URL=https://your-backend-url.com
-   NEXT_PUBLIC_APP_NAME=RecallFlow
-   ```
-4. Deploy!
+### Step 1: Database Setup (Neon.tech)
+1. Go to [Neon.tech](https://neon.tech/) and create a free account.
+2. Create a new PostgreSQL database.
+3. Copy the Connection String (it looks like `postgresql://user:password@host/dbname`).
+4. **Important:** Change `postgresql://` to `postgresql+asyncpg://` so the async backend can connect. Save this URL for Step 2.
 
-### Backend → Railway / Render / Fly.io
+### Step 2: Backend Setup (Render.com)
+*Note: A `render.yaml` file is included in this repository to automate this process.*
+1. Push this repository to your GitHub account.
+2. Go to [Render.com](https://render.com/) and click **New+** -> **Blueprint**.
+3. Connect your GitHub account and select your `RecallFlow` repository.
+4. Render will automatically read the `render.yaml` file and prompt you for the `DATABASE_URL`.
+5. Paste your modified Neon connection string into the `DATABASE_URL` field.
+6. Click **Apply**. Render will automatically build the backend and deploy it.
+7. Once deployed, copy your backend URL (e.g., `https://recallflow-api.onrender.com`).
 
-1. Push backend to a git repository
-2. Connect to your hosting provider
-3. Set environment variables:
-   ```
-   DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/recallflow
-   JWT_SECRET_KEY=your-production-secret-key
-   CORS_ORIGINS=https://your-app.vercel.app
-   ```
-4. The backend will auto-create tables on startup
+### Step 3: Frontend Setup (Vercel)
+1. Go to [Vercel.com](https://vercel.com/) and click **Add New** -> **Project**.
+2. Import your `RecallFlow` repository.
+3. **CRITICAL:** Under **Root Directory**, click **Edit** and select the `frontend` folder.
+4. Open the **Environment Variables** section and add:
+   - `NEXT_PUBLIC_API_URL`: Your Render backend URL (e.g., `https://recallflow-api.onrender.com`)
+   - `NEXT_PUBLIC_APP_NAME`: `RecallFlow`
+5. Click **Deploy**.
 
-### Database → Neon (Free PostgreSQL)
-
-1. Create a free database at [neon.tech](https://neon.tech)
-2. Copy the connection string
-3. Set as `DATABASE_URL` in your backend environment
+That's it! Your Vercel frontend is now talking to your Render backend, which is connected to your Neon database. Background tasks will run automatically on Render.
 
 ---
 
